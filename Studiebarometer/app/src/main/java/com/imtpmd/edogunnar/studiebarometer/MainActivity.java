@@ -1,5 +1,6 @@
 package com.imtpmd.edogunnar.studiebarometer;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -28,8 +29,8 @@ import java.util.HashMap;
 public class MainActivity extends AppCompatActivity {
 
     ArrayList<HashMap<String, String>> arrayList;
-    SharedPreferences  mPrefs;
     public String myPreferences;
+    String prefsTestFlapdrol;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,22 +39,29 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        // functies aanroepen bij opstart app
-        //loadJSONFromAsset();
-        //sharedPreferences = getSharedPreferences(myPreferences, Context.MODE_PRIVATE);
+        try {
+            myPreferences = readStringFromSharedPreferences(getBaseContext(), "MyJSONObject");
+            //myPreferences = mPrefs.getString("MyJSONObject", ""); // leest waarden uit
+            Toast.makeText(MainActivity.this, "onCreate() " + myPreferences, Toast.LENGTH_SHORT).show();
+        }
+        catch (NullPointerException e){
+            e.printStackTrace();
+        }
+
 
         JSONParser();
 
         try {
-            mPrefs = PreferenceManager.getDefaultSharedPreferences(this);
-            SharedPreferences.Editor prefsEditor = mPrefs.edit();
-            Gson gson = new Gson();
-            String json = gson.toJson(arrayList);
-            Log.d("json", json);
-            prefsEditor.putString("MyJSONObject", json);
-            prefsEditor.commit();
 
-            myPreferences = mPrefs.getString("MyJSONObject", ""); // leest waarden uit
+//            mPrefs = this.getSharedPreferences("SHARED_PREFERENCES", 0);
+//            SharedPreferences.Editor prefsEditor = mPrefs.edit();
+//            Gson gson = new Gson();
+//            String json = gson.toJson(arrayList);
+//            Log.d("json", json);
+//            prefsEditor.putString("MyJSONObject", json);
+//            prefsEditor.commit();
+
+//            myPreferences = mPrefs.getString("MyJSONObject", ""); // leest waarden uit
             Toast.makeText(MainActivity.this, myPreferences, Toast.LENGTH_SHORT).show();
             //Log.d("myPreferences", myPreferences);
         }
@@ -88,7 +96,7 @@ public class MainActivity extends AppCompatActivity {
     public void JSONParser() {
         // JSON inladen in listview
 
-        //Log.d("myPreferences", myPreferences);
+        Log.d("myPreferences = ", "" + myPreferences);
 
         if (myPreferences == null ) {
             //Log.d("JSONParser()", "if");
@@ -118,6 +126,8 @@ public class MainActivity extends AppCompatActivity {
                 }
                 Log.d("jsonstring.json", "succesvol ingelezen");
 
+                saveStringToSharedPreferences(getBaseContext(), "MyJSONObject", arrayList.toString()); // opslaan in preferences
+
 
             } catch (JSONException e) {
                 Log.d("JSONParser()", "catch");
@@ -127,6 +137,23 @@ public class MainActivity extends AppCompatActivity {
             Log.d("myPreferences", "bevat iets anders dan 'null'");
         }
 
+    }
+
+    public static void saveStringToSharedPreferences(Context mContext, String key, String value) {
+        if(mContext != null) {
+            SharedPreferences mSharedPreferences = mContext.getSharedPreferences("SHARED_PREFERENCES", 0);
+            if(mSharedPreferences != null)
+                mSharedPreferences.edit().putString(key, value).commit();
+        }
+    }
+
+    public static String readStringFromSharedPreferences(Context mContext, String key) {
+        if(mContext != null) {
+            SharedPreferences mSharedPreferences = mContext.getSharedPreferences("SHARED_PREFERENCES", 0);
+            if(mSharedPreferences != null)
+                return mSharedPreferences.getString(key, null);
+        }
+        return null;
     }
 
     public String loadJSONFromAsset() {
@@ -177,9 +204,17 @@ public class MainActivity extends AppCompatActivity {
     protected void onPause()
     {
         super.onPause();
-        myPreferences = "uw moeder is een flapdrol";
-        Toast.makeText(MainActivity.this, myPreferences, Toast.LENGTH_SHORT).show();
-        Log.d("myPreferences-onPause()", myPreferences);
+        prefsTestFlapdrol = "uw moeder is een flapdrol";
+
+//        SharedPreferences.Editor prefsEditor = mPrefs.edit();
+//        prefsEditor.putString("MyJSONObject", prefsTestFlapdrol);
+//        prefsEditor.commit();
+//        myPreferences = mPrefs.getString("MyJSONObject", ""); // leest waarden uit
+
+        saveStringToSharedPreferences(getBaseContext(), "MyJSONObject", prefsTestFlapdrol);
+        myPreferences = readStringFromSharedPreferences(getBaseContext(), "MyJSONObject");
+        Toast.makeText(MainActivity.this, "onPause() " + myPreferences, Toast.LENGTH_SHORT).show();
+        Log.d("MyJSONObject", prefsTestFlapdrol);
     }
 
     @Override
