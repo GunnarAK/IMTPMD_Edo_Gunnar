@@ -30,7 +30,6 @@ public class MainActivity extends AppCompatActivity {
 
     ArrayList<HashMap<String, String>> arrayList;
     public String myPreferences;
-    String prefsTestFlapdrol;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,38 +40,10 @@ public class MainActivity extends AppCompatActivity {
 
         try {
             myPreferences = readStringFromSharedPreferences(getBaseContext(), "MyJSONObject");
-            //myPreferences = mPrefs.getString("MyJSONObject", ""); // leest waarden uit
-            Toast.makeText(MainActivity.this, "onCreate() " + myPreferences, Toast.LENGTH_SHORT).show();
-        }
-        catch (NullPointerException e){
+        } catch (NullPointerException e) {
             e.printStackTrace();
+            JSONParser();
         }
-
-
-        JSONParser();
-
-        try {
-
-//            mPrefs = this.getSharedPreferences("SHARED_PREFERENCES", 0);
-//            SharedPreferences.Editor prefsEditor = mPrefs.edit();
-//            Gson gson = new Gson();
-//            String json = gson.toJson(arrayList);
-//            Log.d("json", json);
-//            prefsEditor.putString("MyJSONObject", json);
-//            prefsEditor.commit();
-
-//            myPreferences = mPrefs.getString("MyJSONObject", ""); // leest waarden uit
-            Toast.makeText(MainActivity.this, myPreferences, Toast.LENGTH_SHORT).show();
-            //Log.d("myPreferences", myPreferences);
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-            Log.d("Jammer joh", "Jammer joh");
-        }
-        Log.d("myPreferences - end act", myPreferences);
-
-
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -87,71 +58,71 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onStart()
-    {
+    protected void onStart() {
         super.onStart();
 
     }
 
     public void JSONParser() {
         // JSON inladen in listview
+        Log.d("JSONParser()", "Started!");
 
-        Log.d("myPreferences = ", "" + myPreferences);
+        Log.d("myPreferences", "GEEN PREFS GEVONDEN : " + myPreferences);
+        try {
+            JSONObject obj = new JSONObject(loadJSONFromAsset());
 
-        if (myPreferences == null ) {
-            //Log.d("JSONParser()", "if");
-            Log.d("Preferences", "Nog geen preferences gevonden. Aanmaken...");
-            try {
-                JSONObject obj = new JSONObject(loadJSONFromAsset());
-                //Log.d("JSONParser()", "Started!");
-                JSONArray jsonArray = obj.getJSONArray("vakken");
-                arrayList = new ArrayList<HashMap<String, String>>();
-                HashMap<String, String> hashMap;
+            JSONArray jsonArray = obj.getJSONArray("vakken");
+            arrayList = new ArrayList<HashMap<String, String>>();
+            HashMap<String, String> hashMap;
 
-                for (int i = 0; i < jsonArray.length(); i++) {
-                    JSONObject vak = jsonArray.getJSONObject(i);
-                    String vakNaam = vak.getString("name");
-                    String vakStudiePunten = vak.getString("ects");
-                    String vakCijfer = vak.getString("grade");
-                    String vakPeriode = vak.getString("period");
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject vak = jsonArray.getJSONObject(i);
+                String vakNaam = vak.getString("name");
+                String vakStudiePunten = vak.getString("ects");
+                String vakCijfer = vak.getString("grade");
+                String vakPeriode = vak.getString("period");
 
-                    //Add your values in your `ArrayList` as below:
-                    hashMap = new HashMap<String, String>();
-                    hashMap.put("name", vakNaam);
-                    hashMap.put("ects", vakStudiePunten);
-                    hashMap.put("grade", vakCijfer);
-                    hashMap.put("period", vakPeriode);
+                // waarden in arraylist zetten
+                hashMap = new HashMap<String, String>();
+                hashMap.put("name", vakNaam);
+                hashMap.put("ects", vakStudiePunten);
+                hashMap.put("grade", vakCijfer);
+                hashMap.put("period", vakPeriode);
 
-                    arrayList.add(hashMap);
-                }
-                Log.d("jsonstring.json", "succesvol ingelezen");
-
-                saveStringToSharedPreferences(getBaseContext(), "MyJSONObject", arrayList.toString()); // opslaan in preferences
-
-
-            } catch (JSONException e) {
-                Log.d("JSONParser()", "catch");
-                e.printStackTrace();
+                arrayList.add(hashMap);
             }
-        } else {
-            Log.d("myPreferences", "bevat iets anders dan 'null'");
-        }
+            Log.d("jsonstring.json", "succesvol ingelezen");
 
+            saveStringToSharedPreferences(getBaseContext(), "MyJSONObject", arrayList.toString()); // opslaan in preferences
+
+
+        } catch (JSONException e) {
+            Log.d("JSONParser()", "catch");
+            e.printStackTrace();
+        }
     }
 
+    // wijzigen sharedPreferences
     public static void saveStringToSharedPreferences(Context mContext, String key, String value) {
-        if(mContext != null) {
+        if (mContext != null) {
             SharedPreferences mSharedPreferences = mContext.getSharedPreferences("SHARED_PREFERENCES", 0);
-            if(mSharedPreferences != null)
+            if (mSharedPreferences != null) {
                 mSharedPreferences.edit().putString(key, value).commit();
+                Toast.makeText(mContext, "sharedPreferences zijn gewijzigd!; " + key, Toast.LENGTH_LONG).show();
+                Log.d("sharedPref - gewijzigd", value);
+            }
         }
     }
 
+    // lezen sharedPreferences
     public static String readStringFromSharedPreferences(Context mContext, String key) {
-        if(mContext != null) {
+        if (mContext != null) {
             SharedPreferences mSharedPreferences = mContext.getSharedPreferences("SHARED_PREFERENCES", 0);
-            if(mSharedPreferences != null)
+            if (mSharedPreferences != null) {
+                Toast.makeText(mContext, "sharedPreferences zijn uitgelezen!; " + key, Toast.LENGTH_SHORT).show();
+                Log.d("sharedPref - uitgelezen", mSharedPreferences.getString(key, null));
                 return mSharedPreferences.getString(key, null);
+            }
         }
         return null;
     }
@@ -200,27 +171,12 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    protected void onPause()
-    {
-        super.onPause();
-        prefsTestFlapdrol = "uw moeder is een flapdrol";
-
-//        SharedPreferences.Editor prefsEditor = mPrefs.edit();
-//        prefsEditor.putString("MyJSONObject", prefsTestFlapdrol);
-//        prefsEditor.commit();
-//        myPreferences = mPrefs.getString("MyJSONObject", ""); // leest waarden uit
-
-        saveStringToSharedPreferences(getBaseContext(), "MyJSONObject", prefsTestFlapdrol);
-        myPreferences = readStringFromSharedPreferences(getBaseContext(), "MyJSONObject");
-        Toast.makeText(MainActivity.this, "onPause() " + myPreferences, Toast.LENGTH_SHORT).show();
-        Log.d("MyJSONObject", prefsTestFlapdrol);
-    }
-
-    @Override
-    protected void onDestroy()
-    {
-        super.onDestroy();
-        Log.d("myPreferences-onDestroy", myPreferences);
-    }
+//    @Override
+//    protected void onPause()
+//    {
+//        super.onPause();
+//        myPreferences = readStringFromSharedPreferences(getBaseContext(), "MyJSONObject");
+//        Toast.makeText(MainActivity.this, "onPause() " + myPreferences, Toast.LENGTH_SHORT).show();
+//        Log.d("MyJSONObject", myPreferences);
+//    }
 }
