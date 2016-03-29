@@ -13,40 +13,57 @@
     tools:showIn="@layout/activity_main">
 
     <TextView
-        android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Voortgang" />
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Naam student"
+        android:textSize="25dp"
+        android:id="@+id/naamStudent"
+        android:layout_alignTop="@+id/imageView"
+        android:layout_alignStart="@+id/jaargang" />
 
-    <ListView
-        android:id="@+id/listViewPeriode1"
+    <TextView
+        android:id="@+id/jaargang"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/textView"
-        android:layout_marginTop="50dp">
+        android:text="jaargang"
+        android:textSize="20dp"
+        android:layout_below="@+id/naamStudent"
+        android:layout_alignParentStart="true" />
 
-        <!--<LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_alignParentStart="true"
-            android:orientation="horizontal"></LinearLayout>-->
-    </ListView>
-
-    <ListView
-        android:id="@+id/listViewPeriode2"
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/listViewPeriode1"
-        android:layout_marginTop="50dp">
+        android:text="huidige periode"
+        android:textSize="15dp"
+        android:id="@+id/huidigePeriode"
+        android:layout_below="@id/jaargang"/>
 
-        <!--<LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_alignParentStart="true"
-            android:orientation="horizontal"></LinearLayout>-->
-    </ListView>
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@mipmap/logo_hsleiden"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:id="@+id/imageView" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Aantal studiepunten"
+        android:id="@+id/aantalStudiepunten"
+        android:layout_below="@+id/imageView"
+        android:layout_alignStart="@+id/huidigePeriode" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Advies"
+        android:id="@+id/advies"
+        android:layout_below="@+id/aantalStudiepunten"
+        android:layout_alignStart="@+id/aantalStudiepunten" />
 
 
 </RelativeLayout>
