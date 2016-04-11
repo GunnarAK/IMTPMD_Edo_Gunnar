@@ -12,58 +12,99 @@
     tools:context="com.imtpmd.edogunnar.studiebarometer.MainActivity"
     tools:showIn="@layout/activity_main">
 
-    <TextView
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Naam student"
-        android:textSize="25dp"
-        android:id="@+id/naamStudent"
-        android:layout_alignTop="@+id/imageView"
-        android:layout_alignStart="@+id/jaargang" />
+        android:layout_alignBottom="@+id/imageViewLogo"
+        android:layout_alignTop="@+id/imageViewLogo"
+        android:gravity="center_vertical|left"
+        android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/jaargang"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="2015 - 2016"
-        android:textSize="20dp"
-        android:layout_below="@+id/naamStudent"
-        android:layout_alignParentStart="true" />
+        <TextView
+            android:id="@+id/naamStudent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@+id/jaargang"
+            android:text="Naam student"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textSize="25dp" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="huidige periode"
-        android:textSize="15dp"
-        android:id="@+id/huidigePeriode"
-        android:layout_below="@id/jaargang"/>
+        <TextView
+            android:id="@+id/jaargang"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/naamStudent"
+            android:text="2015 - 2016"
+            android:textSize="20dp" />
+
+        <TextView
+            android:id="@+id/huidigePeriode"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/jaargang"
+            android:text="huidige periode"
+            android:textSize="15dp" />
+    </LinearLayout>
 
     <ImageView
+        android:id="@+id/imageViewLogo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@mipmap/logo_hsleiden"
-        android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
-        android:id="@+id/imageView" />
+        android:layout_alignParentTop="true"
+        android:src="@mipmap/logo_hsleiden" />
 
     <TextView
+        android:id="@+id/textViewStudiepunten"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Aantal studiepunten"
-        android:id="@+id/aantalStudiepunten"
-        android:layout_below="@+id/imageView"
-        android:layout_alignStart="@+id/huidigePeriode" />
+        android:layout_below="@+id/imageViewLogo"
+        android:layout_marginTop="30dp"
+        android:text="Aantal EC:"
+        android:textSize="30dp" />
+
+
+    <LinearLayout
+        android:id="@+id/studiepunten"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textViewStudiepunten"
+        android:orientation="horizontal"
+        android:gravity="center_horizontal">
+
+        <TextView
+            android:id="@+id/aantalStudiepunten"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:text="0"
+            android:textAlignment="center"
+            android:textSize="60dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/aantalStudiepunten"
+            android:text="/ 60" />
+    </LinearLayout>
 
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Advies"
         android:id="@+id/advies"
-        android:layout_below="@+id/aantalStudiepunten"
-        android:layout_alignStart="@+id/aantalStudiepunten" />
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/studiepunten"
+        android:layout_marginTop="20dp"
+        android:text="Advies"
+        android:textSize="30dp" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/advies"
+        android:text="Ga uw SLB'er pesten."
+        android:textSize="20dp" />
 
 
 </RelativeLayout>

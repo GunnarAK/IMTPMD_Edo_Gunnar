@@ -16,7 +16,7 @@ public class SharedPreferences {
             if (mSharedPreferences != null) {
                 mSharedPreferences.edit().putString(key, value).apply();
                 Toast.makeText(mContext, "sharedPreferences zijn gewijzigd!; " + key, Toast.LENGTH_LONG).show();
-                Log.d("sharedPref(" + key + ") - gewijzigd", value); // toont key en value on logcat
+                Log.d("sharedPref(" + key + ") gewijzigd", value); // toont key en value on logcat
             }
         }
     }
@@ -27,7 +27,7 @@ public class SharedPreferences {
             android.content.SharedPreferences mSharedPreferences = mContext.getSharedPreferences("SHARED_PREFERENCES", 0);
             if (mSharedPreferences != null) {
                 Toast.makeText(mContext, "sharedPreferences zijn uitgelezen!; " + key, Toast.LENGTH_SHORT).show();
-                Log.d("sharedPref(" + key + ") - uitgelezen", mSharedPreferences.getString(key, null)); // toont key en value on logcat
+                Log.d("sharedPref(" + key + ") uitgelezen", mSharedPreferences.getString(key, null)); // toont key en value on logcat
                 return mSharedPreferences.getString(key, null);
             }
         }

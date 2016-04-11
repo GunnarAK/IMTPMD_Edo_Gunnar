@@ -1,10 +1,7 @@
 package com.imtpmd.edogunnar.studiebarometer;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -21,24 +18,32 @@ import com.google.gson.Gson;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
     ArrayList<HashMap<String, String>> arrayList;
     public String myPreferences;
-    public String naamStudent;
+//    public String naamStudent;
     com.imtpmd.edogunnar.studiebarometer.SharedPreferences mPrefs;
+    SimpleDateFormat simpleDate = new SimpleDateFormat("dd/MM/yyyy");
+    String stringDatumBeginPeriode1;
+    String stringDatumEindPeriode1;
+    String stringDatumBeginPeriode2;
+    String stringDatumEindPeriode2;
+    String stringDatumBeginPeriode3;
+    String stringDatumEindPeriode3;
+    String stringDatumBeginPeriode4;
+    String stringDatumEindPeriode4;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +54,7 @@ public class MainActivity extends AppCompatActivity {
 
         naamVaststellen();
         datumVaststellen();
+        studiepuntenVaststellen();
     }
 
     public void naamVaststellen()
@@ -68,30 +74,26 @@ public class MainActivity extends AppCompatActivity {
     public void datumVaststellen()
     {
         Date datumVandaagParsed = new Date();
-        SimpleDateFormat simpleDate = new SimpleDateFormat("dd/MM/yyyy");
+
         String datumVandaag = simpleDate.format(new Date());
         Log.d("datumVandaag", datumVandaag);
 
         TextView huidigePeriode = (TextView) findViewById(R.id.huidigePeriode);
 
-        String stringDatumBeginPeriode1 = new String();
+
         Date datumBeginPeriode1 = new Date();
-        String stringDatumEindPeriode1 = new String();
         Date datumEindPeriode1 = new Date();
 
-        String stringDatumBeginPeriode2 = new String();
+
         Date datumBeginPeriode2 = new Date();
-        String stringDatumEindPeriode2 = new String();
         Date datumEindPeriode2 = new Date();
 
-        String stringDatumBeginPeriode3 = new String();
+
         Date datumBeginPeriode3 = new Date();
-        String stringDatumEindPeriode3 = new String();
         Date datumEindPeriode3 = new Date();
 
-        String stringDatumBeginPeriode4 = new String();
+
         Date datumBeginPeriode4 = new Date();
-        String stringDatumEindPeriode4 = new String();
         Date datumEindPeriode4 = new Date();
 
         try {
@@ -171,10 +173,16 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
+    public void studiepuntenVaststellen() {
+        try {
+            TextView studiePunten = (TextView) findViewById(R.id.aantalStudiepunten);
+            studiePunten.setText(mPrefs.readStringFromSharedPreferences(getBaseContext(), "aantalStudiepunten"));
 
+            Log.d("EC's mPrefs", mPrefs.readStringFromSharedPreferences(getBaseContext(), "aantalStudiepunten"));
+        } catch (NullPointerException e) {
+            Log.d("EC's mPrefs", "Kon studiepunten-aantal niet vinden");
+            e.printStackTrace();
+        }
     }
 
     public void JSONParser() {
@@ -206,6 +214,7 @@ public class MainActivity extends AppCompatActivity {
                 arrayList.add(hashMap);
             }
             Log.d("jsonstring.json", "succesvol ingelezen");
+            Log.d("vakNamen", mPrefs.readStringFromSharedPreferences(getBaseContext(), "vakNaam"));
 
             mPrefs.saveStringToSharedPreferences(getBaseContext(), "vakken", arrayList.toString()); // opslaan in preferences
 
@@ -216,6 +225,10 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    public ArrayList<HashMap<String, String>> getArrayList()
+    {
+        return arrayList;
+    }
 
     public String loadJSONFromAsset() {
         // JSON string ophalen
