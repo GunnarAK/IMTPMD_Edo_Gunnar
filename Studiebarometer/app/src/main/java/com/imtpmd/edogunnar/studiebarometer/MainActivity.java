@@ -13,8 +13,6 @@ import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -26,11 +24,10 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    ArrayList<HashMap<String, String>> arrayList;
+    ArrayList<HashMap<String, String>> arrayListVakken;
     public String myPreferences;
 //    public String naamStudent;
     com.imtpmd.edogunnar.studiebarometer.SharedPreferences mPrefs;
@@ -169,6 +166,7 @@ public class MainActivity extends AppCompatActivity {
 
                 // open nieuwe activity om cijfers toe te voegen
                 startActivity(new Intent(MainActivity.this, InputActivity.class));
+                finish();
             }
         });
     }
@@ -194,7 +192,7 @@ public class MainActivity extends AppCompatActivity {
             JSONObject obj = new JSONObject(loadJSONFromAsset());
 
             JSONArray jsonArray = obj.getJSONArray("vakken");
-            arrayList = new ArrayList<HashMap<String, String>>();
+            arrayListVakken = new ArrayList<HashMap<String, String>>();
             HashMap<String, String> hashMap;
 
             for (int i = 0; i < jsonArray.length(); i++) {
@@ -211,23 +209,24 @@ public class MainActivity extends AppCompatActivity {
                 hashMap.put("grade", vakCijfer);
                 hashMap.put("period", vakPeriode);
 
-                arrayList.add(hashMap);
+                arrayListVakken.add(hashMap);
             }
             Log.d("jsonstring.json", "succesvol ingelezen");
-            Log.d("vakNamen", mPrefs.readStringFromSharedPreferences(getBaseContext(), "vakNaam"));
 
-            mPrefs.saveStringToSharedPreferences(getBaseContext(), "vakken", arrayList.toString()); // opslaan in preferences
+
+
 
 
         } catch (JSONException e) {
             Log.d("JSONParser()", "catch");
             e.printStackTrace();
         }
+        Log.d("arrayListVakken", arrayListVakken.toString());
     }
 
     public ArrayList<HashMap<String, String>> getArrayList()
     {
-        return arrayList;
+        return arrayListVakken;
     }
 
     public String loadJSONFromAsset() {
@@ -242,7 +241,7 @@ public class MainActivity extends AppCompatActivity {
             is.read(buffer);
             is.close();
             json = new String(buffer, "UTF-8");
-
+            mPrefs.saveStringToSharedPreferences(getBaseContext(), "vakken", json); // opslaan in preferences
 
         } catch (IOException ex) {
             Log.d("loadJSONFromAsset()", "catch");
@@ -253,27 +252,27 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
+//    @Override
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//        // Inflate the menu; this adds items to the action bar if it is present.
+//        getMenuInflater().inflate(R.menu.menu_main, menu);
+//        return true;
+//    }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
+//    @Override
+//    public boolean onOptionsItemSelected(MenuItem item) {
+//        // Handle action bar item clicks here. The action bar will
+//        // automatically handle clicks on the Home/Up button, so long
+//        // as you specify a parent activity in AndroidManifest.xml.
+//        int id = item.getItemId();
+//
+//        //noinspection SimplifiableIfStatement
+//        if (id == R.id.action_settings) {
+//            return true;
+//        }
+//
+//        return super.onOptionsItemSelected(item);
+//    }
 
 //    @Override
 //    protected void onPause()

@@ -26,7 +26,7 @@ public class SharedPreferences {
         if (mContext != null) {
             android.content.SharedPreferences mSharedPreferences = mContext.getSharedPreferences("SHARED_PREFERENCES", 0);
             if (mSharedPreferences != null) {
-                Toast.makeText(mContext, "sharedPreferences zijn uitgelezen!; " + key, Toast.LENGTH_SHORT).show();
+//                Toast.makeText(mContext, "sharedPreferences zijn uitgelezen!; " + key, Toast.LENGTH_SHORT).show();
                 Log.d("sharedPref(" + key + ") uitgelezen", mSharedPreferences.getString(key, null)); // toont key en value on logcat
                 return mSharedPreferences.getString(key, null);
             }
