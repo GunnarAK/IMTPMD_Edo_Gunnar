@@ -34,11 +34,6 @@ public class MainActivity extends AppCompatActivity {
     String vakCijfer;
     String vakPeriode;
 
-    public static final String VAK_COLUMN = "vak";
-    public static final String PERIODE_COLUMN = "periode";
-    public static final String ECTS_COLUMN = "ects";
-    public static final String CIJFER_COLUMN = "cijfer";
-
     public String myPreferences;
     //    public String naamStudent;
     com.imtpmd.edogunnar.studiebarometer.SharedPreferences mPrefs;
@@ -67,9 +62,6 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                Snackbar.make(view, "Fabulous!", Snackbar.LENGTH_LONG).setAction("Action", null).show();
-
-//                Log.d("sharedprefs-vakken", mPrefs.readStringFromSharedPreferences(getBaseContext(), "vakken"));
                 // open nieuwe activity om cijfers toe te voegen
                 startActivity(new Intent(MainActivity.this, InputActivity.class));
 //                finish();
@@ -81,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
         alleVakkenButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // open nieuwe activity om cijfers toe te voegen
+                // open nieuwe activity om alle vakken te bekijken
                 startActivity(new Intent(MainActivity.this, DetailsActivity.class));
             }
         });
