@@ -26,10 +26,10 @@ public class RegisterActivity extends AppCompatActivity {
             public void onClick(View v) {
                 TextView naamStudent = (TextView) findViewById(R.id.editTextNaamStudent);
                 String stringNaamStudent = naamStudent.getText().toString(); // naam extracten uit textview
-                String aantalStudiepunten = "0";
+//                String aantalStudiepunten = "0";
 
                 mPrefs.saveStringToSharedPreferences(getBaseContext(), "naamStudent", stringNaamStudent); // naam opslaan in preferences
-                mPrefs.saveStringToSharedPreferences(getBaseContext(), "aantalStudiepunten", aantalStudiepunten); // studiepunten opslaan in preferences
+//                mPrefs.saveStringToSharedPreferences(getBaseContext(), "aantalStudiepunten", aantalStudiepunten); // studiepunten opslaan in preferences
                 startActivity(new Intent(RegisterActivity.this, MainActivity.class));
                 finish();
             }

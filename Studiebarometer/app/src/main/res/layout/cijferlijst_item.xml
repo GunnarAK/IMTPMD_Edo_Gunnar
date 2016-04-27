@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/cijferVak"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_weight="1"
+        android:text="vak"
+        android:textSize="25dp" />
+
+    <TextView
+        android:id="@+id/cijferPeriode"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.1"
+        android:text="periode"
+        android:textSize="25dp" />
+
+    <TextView
+        android:id="@+id/cijferStudiepunten"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.1"
+        android:text="vakEC's"
+        android:textSize="25dp" />
+
+    <TextView
+        android:id="@+id/cijferCijfer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.2"
+        android:text="cijfer"
+        android:textSize="25dp"
+        android:layout_marginRight="20dp"/>
+
+
+</LinearLayout>

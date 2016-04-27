@@ -19,9 +19,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".InputActivity" android:screenOrientation="portrait"/>
-        <activity android:name=".DetailsActivity" android:screenOrientation="portrait"/>
-        <activity android:name=".RegisterActivity" android:theme="@style/AppTheme.NoActionBar" android:screenOrientation="portrait"/>
+        <activity android:name=".InputActivity" />
+        <activity android:name=".DetailsActivity" />
+        <activity android:name=".RegisterActivity" android:theme="@style/AppTheme.NoActionBar" />
     </application>
 
 </manifest>

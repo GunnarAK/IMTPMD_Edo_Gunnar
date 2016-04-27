@@ -3,13 +3,12 @@ package com.imtpmd.edogunnar.studiebarometer;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,12 +23,18 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
     ArrayList<HashMap<String, String>> arrayListVakken;
+    String vakNaam;
+    String vakStudiePunten;
+    String vakCijfer;
+    String vakPeriode;
+
     public String myPreferences;
-//    public String naamStudent;
+    //    public String naamStudent;
     com.imtpmd.edogunnar.studiebarometer.SharedPreferences mPrefs;
     SimpleDateFormat simpleDate = new SimpleDateFormat("dd/MM/yyyy");
     String stringDatumBeginPeriode1;
@@ -50,12 +55,18 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         naamVaststellen();
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.d("onResume", "CALLED");
         datumVaststellen();
         studiepuntenVaststellen();
     }
 
-    public void naamVaststellen()
-    {
+    public void naamVaststellen() {
         try {
 
             TextView naamStudent = (TextView) findViewById(R.id.naamStudent);
@@ -68,8 +79,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    public void datumVaststellen()
-    {
+    public void datumVaststellen() {
         Date datumVandaagParsed = new Date();
 
         String datumVandaag = simpleDate.format(new Date());
@@ -95,7 +105,7 @@ public class MainActivity extends AppCompatActivity {
 
         try {
 
-            datumVandaagParsed = simpleDate.parse(datumVandaag);
+            datumVandaagParsed = simpleDate.parse("28/04/2016");
 
             stringDatumBeginPeriode1 = "01/09/2015";
             datumBeginPeriode1 = simpleDate.parse(stringDatumBeginPeriode1);
@@ -129,24 +139,32 @@ public class MainActivity extends AppCompatActivity {
         }
 
 
-        if (datumVandaagParsed.after(datumBeginPeriode1) && datumVandaagParsed.before(datumEindPeriode1)) {
+        try {
+            if (datumVandaagParsed.after(datumBeginPeriode1) && datumVandaagParsed.before(datumEindPeriode1)) {
 
-            huidigePeriode.setText("Periode 1");
-        }
+                huidigePeriode.setText("Periode 1");
+            }
 
-        if (datumVandaagParsed.after(datumBeginPeriode2) && datumVandaagParsed.before(datumEindPeriode2)) {
+            if (datumVandaagParsed.after(datumBeginPeriode2) && datumVandaagParsed.before(datumEindPeriode2)) {
 
-            huidigePeriode.setText("Periode 2");
-        }
+                huidigePeriode.setText("Periode 2");
+            }
 
-        if (datumVandaagParsed.after(datumBeginPeriode3) && datumVandaagParsed.before(datumEindPeriode3)) {
+            if (datumVandaagParsed.after(datumBeginPeriode3) && datumVandaagParsed.before(datumEindPeriode3)) {
 
-            huidigePeriode.setText("Periode 3");
-        }
+                huidigePeriode.setText("Periode 3");
+            }
 
-        if (datumVandaagParsed.after(datumBeginPeriode4) && datumVandaagParsed.before(datumEindPeriode4)) {
+            if (datumVandaagParsed.after(datumBeginPeriode4) && datumVandaagParsed.before(datumEindPeriode4)) {
 
-            huidigePeriode.setText("Periode 4");
+                huidigePeriode.setText("Periode 4");
+            }
+
+            Log.d("huidigePeriode MA", huidigePeriode.getText().toString());
+
+        } catch (NullPointerException e) {
+            Log.d("periode uitlezen", "niet gelukt");
+            e.printStackTrace();
         }
 
 
@@ -155,18 +173,19 @@ public class MainActivity extends AppCompatActivity {
         } catch (NullPointerException e) {
             Log.d("sharedPreferences", "geen preferences gevonden");
             e.printStackTrace();
-            JSONParser();
+            JSONParser(loadJSONFromAsset());
         }
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Fabulous!", Snackbar.LENGTH_LONG).setAction("Action", null).show();
+//                Snackbar.make(view, "Fabulous!", Snackbar.LENGTH_LONG).setAction("Action", null).show();
 
+//                Log.d("sharedprefs-vakken", mPrefs.readStringFromSharedPreferences(getBaseContext(), "vakken"));
                 // open nieuwe activity om cijfers toe te voegen
                 startActivity(new Intent(MainActivity.this, InputActivity.class));
-                finish();
+//                finish();
             }
         });
     }
@@ -174,22 +193,87 @@ public class MainActivity extends AppCompatActivity {
     public void studiepuntenVaststellen() {
         try {
             TextView studiePunten = (TextView) findViewById(R.id.aantalStudiepunten);
-            studiePunten.setText(mPrefs.readStringFromSharedPreferences(getBaseContext(), "aantalStudiepunten"));
+            ListView ingevoerdeCijfers = (ListView) findViewById(R.id.cijfersListView);
+            int aantalStudiePunten = 0;
 
-            Log.d("EC's mPrefs", mPrefs.readStringFromSharedPreferences(getBaseContext(), "aantalStudiepunten"));
+            try {
+                JSONObject obj = new JSONObject(mPrefs.readStringFromSharedPreferences(getBaseContext(), "vakken"));
+
+                JSONArray jsonArray = obj.getJSONArray("vakken");
+
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    JSONObject vak = jsonArray.getJSONObject(i);
+                    vakNaam = vak.getString("name");
+                    vakPeriode = vak.getString("period");
+                    double vakCijfer = Double.parseDouble(vak.getString("grade"));
+                    int vakStudiePunten = Integer.parseInt(vak.getString("ects"));
+
+                    // tellen studiepunten
+                    if (vakCijfer >= 5.5) {
+                        aantalStudiePunten = aantalStudiePunten + vakStudiePunten;
+                    }
+
+//                    // ingevoerde cijfers noteren in listview
+//                    if (vakCijfer >= 1)
+//                    {
+//                        // populate listview
+//                        // per listitem: cijferVak & cijferCijfer
+//
+//                        ListView cijferLijstListView = (ListView) findViewById(R.id.cijfersListView);
+//
+//                        List<String> cijferLijst = new ArrayList<String>();
+//
+//                        cijferLijst.clear();
+//                        try {
+//                            for (int c = 0; c < jsonArray.length(); c++) {
+//                                vak = jsonArray.getJSONObject(i);
+//                                String vakNaamCijferLijst = vak.getString("name");
+//                                String vakPeriodeCijferLijst = vak.getString("period");
+//                                String vakCijferCijferLijst = vak.getString("grade");
+//                                String vakStudiepuntenCijferLijst = vak.getString("ects");
+//
+//                                if (Double.parseDouble(vakCijferCijferLijst) >= 1) {
+//                                    cijferLijst.add(vakNaam);
+//                                    Log.d("cijferLijst", cijferLijst.toString());
+//                                }
+//                            }
+//                            if (cijferLijst.isEmpty())
+//                            {
+//                                cijferLijst.add("Je hebt nog geen cijfers ingevoerd");
+//                            }
+//
+//                        } catch (JSONException e) {
+//                            e.printStackTrace();
+//                        }
+//
+//                        ArrayAdapter<String> cijferLijstArrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, cijferLijst); //selected item will look like a spinner set from XML
+////                        cijferLijstArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+//                        cijferLijstListView.setAdapter(cijferLijstArrayAdapter);
+//
+//
+//                    }
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+
+            studiePunten.setText(String.valueOf(aantalStudiePunten));
+
+
+//            Log.d("EC's mPrefs", mPrefs.readStringFromSharedPreferences(getBaseContext(), "aantalStudiepunten"));
         } catch (NullPointerException e) {
-            Log.d("EC's mPrefs", "Kon studiepunten-aantal niet vinden");
+            Log.d("EC's", "Kon studiepunten-aantal niet berekenen");
             e.printStackTrace();
         }
     }
 
-    public void JSONParser() {
-        // JSON inladen in listview
+    public String JSONParser(String jsonString) {
         Log.d("JSONParser()", "Started!");
 
         Log.d("myPreferences", "GEEN PREFS GEVONDEN : " + myPreferences);
         try {
-            JSONObject obj = new JSONObject(loadJSONFromAsset());
+            JSONObject obj = new JSONObject(jsonString);
 
             JSONArray jsonArray = obj.getJSONArray("vakken");
             arrayListVakken = new ArrayList<HashMap<String, String>>();
@@ -197,10 +281,10 @@ public class MainActivity extends AppCompatActivity {
 
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject vak = jsonArray.getJSONObject(i);
-                String vakNaam = vak.getString("name");
-                String vakStudiePunten = vak.getString("ects");
-                String vakCijfer = vak.getString("grade");
-                String vakPeriode = vak.getString("period");
+                vakNaam = vak.getString("name");
+                vakStudiePunten = vak.getString("ects");
+                vakCijfer = vak.getString("grade");
+                vakPeriode = vak.getString("period");
 
                 // waarden in arraylist zetten
                 hashMap = new HashMap<String, String>();
@@ -214,24 +298,21 @@ public class MainActivity extends AppCompatActivity {
             Log.d("jsonstring.json", "succesvol ingelezen");
 
 
-
-
-
         } catch (JSONException e) {
             Log.d("JSONParser()", "catch");
             e.printStackTrace();
         }
         Log.d("arrayListVakken", arrayListVakken.toString());
+        return jsonString;
     }
 
-    public ArrayList<HashMap<String, String>> getArrayList()
-    {
+    public ArrayList<HashMap<String, String>> getArrayList() {
         return arrayListVakken;
     }
 
     public String loadJSONFromAsset() {
         // JSON string ophalen
-        //Log.d("loadJSONFromAsset()", "Started!");
+        Log.d("loadJSONFromAsset()", "Started!");
         Toast.makeText(getBaseContext(), "jsonstring.json inlezen!; ", Toast.LENGTH_SHORT).show();
         String json; // = null;
         try {
@@ -251,32 +332,4 @@ public class MainActivity extends AppCompatActivity {
         return json;
     }
 
-
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        // Inflate the menu; this adds items to the action bar if it is present.
-//        getMenuInflater().inflate(R.menu.menu_main, menu);
-//        return true;
-//    }
-
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        // Handle action bar item clicks here. The action bar will
-//        // automatically handle clicks on the Home/Up button, so long
-//        // as you specify a parent activity in AndroidManifest.xml.
-//        int id = item.getItemId();
-//
-//        //noinspection SimplifiableIfStatement
-//        if (id == R.id.action_settings) {
-//            return true;
-//        }
-//
-//        return super.onOptionsItemSelected(item);
-//    }
-
-//    @Override
-//    protected void onPause()
-//    {
-//        super.onPause();
-//    }
 }

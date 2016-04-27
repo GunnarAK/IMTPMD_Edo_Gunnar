@@ -90,7 +90,7 @@
     </LinearLayout>
 
     <TextView
-        android:id="@+id/advies"
+        android:id="@+id/adviesTitel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
@@ -100,11 +100,31 @@
         android:textSize="30dp" />
 
     <TextView
+        android:id="@+id/advies"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/advies"
+        android:layout_below="@id/adviesTitel"
         android:text="Ga uw SLB'er pesten."
         android:textSize="20dp" />
+
+    <TextView
+        android:id="@+id/cijfersTitel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/advies"
+        android:layout_marginTop="30dp"
+        android:text="Cijfers"
+        android:textSize="30dp" />
+
+    <ListView
+        android:id="@+id/cijfersListView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/cijfersTitel"
+        android:layout_marginTop="10dp">
+
+    </ListView>
 
 
 </RelativeLayout>
