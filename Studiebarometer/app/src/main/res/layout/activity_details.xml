@@ -8,7 +8,9 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="Naam vak"
-        android:id="@+id/vakNaam"
+        android:id="@+id/vakNaamEditGrade"
+        android:layout_margin="20dp"
+        android:textSize="30dp"
         android:layout_gravity="center_horizontal" />
 
     <TextView
@@ -17,14 +19,42 @@
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="Kernvak: ja/nee"
         android:id="@+id/vakKernBoolean"
+        android:layout_margin="10dp"
         android:layout_gravity="center_horizontal" />
 
-    <Button
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Aanpassen"
-        android:id="@+id/vakCijferAanpassen"
+        android:text="EC's: x"
+        android:id="@+id/vakStudiepuntenEditGrade"
         android:layout_gravity="center_horizontal"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true" />
+        android:layout_margin="10dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/vakPeriodeEditGrade"
+        android:text="Periode x"
+        android:layout_marginBottom="20dp"
+        android:layout_gravity="center_horizontal"/>
+
+    <EditText
+        android:id="@+id/cijferInvoerEditGrade"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_margin="15dp"
+        android:ems="10"
+        android:hint="6.0"
+        android:inputType="numberDecimal"
+        android:textAlignment="center" />
+
+    <Button
+        android:id="@+id/buttonEditGrade"
+        android:layout_width="120dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:background="@color/colorPrimary"
+        android:text="Aanpassen"
+        android:textColor="#fff" />
 </LinearLayout>

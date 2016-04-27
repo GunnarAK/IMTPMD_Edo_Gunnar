@@ -8,6 +8,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -33,6 +34,11 @@ public class MainActivity extends AppCompatActivity {
     String vakCijfer;
     String vakPeriode;
 
+    public static final String VAK_COLUMN = "vak";
+    public static final String PERIODE_COLUMN = "periode";
+    public static final String ECTS_COLUMN = "ects";
+    public static final String CIJFER_COLUMN = "cijfer";
+
     public String myPreferences;
     //    public String naamStudent;
     com.imtpmd.edogunnar.studiebarometer.SharedPreferences mPrefs;
@@ -55,6 +61,30 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         naamVaststellen();
+
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        assert fab != null;
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+//                Snackbar.make(view, "Fabulous!", Snackbar.LENGTH_LONG).setAction("Action", null).show();
+
+//                Log.d("sharedprefs-vakken", mPrefs.readStringFromSharedPreferences(getBaseContext(), "vakken"));
+                // open nieuwe activity om cijfers toe te voegen
+                startActivity(new Intent(MainActivity.this, InputActivity.class));
+//                finish();
+            }
+        });
+
+        Button alleVakkenButton = (Button) findViewById(R.id.buttonAlleVakken);
+        assert alleVakkenButton != null;
+        alleVakkenButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // open nieuwe activity om cijfers toe te voegen
+                startActivity(new Intent(MainActivity.this, DetailsActivity.class));
+            }
+        });
 
     }
 
@@ -105,7 +135,7 @@ public class MainActivity extends AppCompatActivity {
 
         try {
 
-            datumVandaagParsed = simpleDate.parse("28/04/2016");
+            datumVandaagParsed = simpleDate.parse(datumVandaag);
 
             stringDatumBeginPeriode1 = "01/09/2015";
             datumBeginPeriode1 = simpleDate.parse(stringDatumBeginPeriode1);
@@ -140,21 +170,43 @@ public class MainActivity extends AppCompatActivity {
 
 
         try {
+            // periode 1
             if (datumVandaagParsed.after(datumBeginPeriode1) && datumVandaagParsed.before(datumEindPeriode1)) {
 
                 huidigePeriode.setText("Periode 1");
             }
 
+            // periode tussen periode 1 en 2
+            if (datumVandaagParsed.after(datumEindPeriode1) && datumVandaagParsed.before(datumBeginPeriode2)) {
+
+                huidigePeriode.setText("Periode 2 begint vanaf " + datumBeginPeriode2);
+            }
+
+            // periode 2
             if (datumVandaagParsed.after(datumBeginPeriode2) && datumVandaagParsed.before(datumEindPeriode2)) {
 
                 huidigePeriode.setText("Periode 2");
             }
 
+            // periode tussen periode 2 en 3
+            if (datumVandaagParsed.after(datumEindPeriode2) && datumVandaagParsed.before(datumBeginPeriode3)) {
+
+                huidigePeriode.setText("Periode 3 begint vanaf " + datumBeginPeriode3);
+            }
+
+            // periode 3
             if (datumVandaagParsed.after(datumBeginPeriode3) && datumVandaagParsed.before(datumEindPeriode3)) {
 
                 huidigePeriode.setText("Periode 3");
             }
 
+            // periode tussen periode 3 en 4
+            if (datumVandaagParsed.after(datumEindPeriode3) && datumVandaagParsed.before(datumBeginPeriode4)) {
+
+                huidigePeriode.setText("Periode 4 begint vanaf " + datumBeginPeriode4);
+            }
+
+            // periode 4
             if (datumVandaagParsed.after(datumBeginPeriode4) && datumVandaagParsed.before(datumEindPeriode4)) {
 
                 huidigePeriode.setText("Periode 4");
@@ -176,30 +228,21 @@ public class MainActivity extends AppCompatActivity {
             JSONParser(loadJSONFromAsset());
         }
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-//                Snackbar.make(view, "Fabulous!", Snackbar.LENGTH_LONG).setAction("Action", null).show();
 
-//                Log.d("sharedprefs-vakken", mPrefs.readStringFromSharedPreferences(getBaseContext(), "vakken"));
-                // open nieuwe activity om cijfers toe te voegen
-                startActivity(new Intent(MainActivity.this, InputActivity.class));
-//                finish();
-            }
-        });
     }
 
     public void studiepuntenVaststellen() {
         try {
             TextView studiePunten = (TextView) findViewById(R.id.aantalStudiepunten);
-            ListView ingevoerdeCijfers = (ListView) findViewById(R.id.cijfersListView);
             int aantalStudiePunten = 0;
 
             try {
                 JSONObject obj = new JSONObject(mPrefs.readStringFromSharedPreferences(getBaseContext(), "vakken"));
 
                 JSONArray jsonArray = obj.getJSONArray("vakken");
+
+                List<String> cijferLijst = new ArrayList<String>();
+                ListView cijferLijstListView = (ListView) findViewById(R.id.cijfersListView);
 
                 for (int i = 0; i < jsonArray.length(); i++) {
                     JSONObject vak = jsonArray.getJSONObject(i);
@@ -213,46 +256,48 @@ public class MainActivity extends AppCompatActivity {
                         aantalStudiePunten = aantalStudiePunten + vakStudiePunten;
                     }
 
-//                    // ingevoerde cijfers noteren in listview
-//                    if (vakCijfer >= 1)
-//                    {
-//                        // populate listview
-//                        // per listitem: cijferVak & cijferCijfer
+                    if (vakCijfer >= 1) {
+                        cijferLijst.add(vakNaam + "      periode: " + vakPeriode + "      EC's: " + vakStudiePunten + "      cijfer: " + vakCijfer);
+
+                    }
+
+                    // ingevoerde cijfers noteren in listview
+                    // populate listview
+                    // per listitem: cijferVak & cijferCijfer
+
+//                    ListView cijferLijstListView = (ListView) findViewById(R.id.cijfersListView);
+
+//                    List<String> cijferLijst = new ArrayList<String>();
+
+//                    cijferLijst.clear();
+//                    try {
+//                        for (int c = 0; c < jsonArray.length(); c++) {
+//                            vak = jsonArray.getJSONObject(c);
+////                            Log.d("vak", vak.toString());
+//                            String vakNaamCijferLijst = vak.getString("name");
+//                            String vakPeriodeCijferLijst = vak.getString("period");
+//                            String vakCijferCijferLijst = vak.getString("grade");
+//                            String vakStudiepuntenCijferLijst = vak.getString("ects");
 //
-//                        ListView cijferLijstListView = (ListView) findViewById(R.id.cijfersListView);
+//                            if (Double.parseDouble(vakCijferCijferLijst) >= 1) {
+//                                cijferLijst.add(vakNaamCijferLijst + ", periode: " + vakPeriodeCijferLijst + ", EC's: " + vakStudiepuntenCijferLijst + ", cijfer: " + vakCijferCijferLijst);
 //
-//                        List<String> cijferLijst = new ArrayList<String>();
-//
-//                        cijferLijst.clear();
-//                        try {
-//                            for (int c = 0; c < jsonArray.length(); c++) {
-//                                vak = jsonArray.getJSONObject(i);
-//                                String vakNaamCijferLijst = vak.getString("name");
-//                                String vakPeriodeCijferLijst = vak.getString("period");
-//                                String vakCijferCijferLijst = vak.getString("grade");
-//                                String vakStudiepuntenCijferLijst = vak.getString("ects");
-//
-//                                if (Double.parseDouble(vakCijferCijferLijst) >= 1) {
-//                                    cijferLijst.add(vakNaam);
-//                                    Log.d("cijferLijst", cijferLijst.toString());
-//                                }
 //                            }
-//                            if (cijferLijst.isEmpty())
-//                            {
-//                                cijferLijst.add("Je hebt nog geen cijfers ingevoerd");
-//                            }
-//
-//                        } catch (JSONException e) {
-//                            e.printStackTrace();
-//                        }
-//
-//                        ArrayAdapter<String> cijferLijstArrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, cijferLijst); //selected item will look like a spinner set from XML
-////                        cijferLijstArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-//                        cijferLijstListView.setAdapter(cijferLijstArrayAdapter);
-//
-//
-//                    }
                 }
+                Log.d("cijferLijst", cijferLijst.toString());
+                if (cijferLijst.isEmpty()) {
+                    cijferLijst.add("Je hebt nog geen cijfers ingevoerd");
+                }
+
+//                    } catch (JSONException e) {
+//                        e.printStackTrace();
+//                    }
+
+                ArrayAdapter<String> cijferLijstArrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, cijferLijst); //selected item will look like a spinner set from XML
+//                        cijferLijstArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                cijferLijstListView.setAdapter(cijferLijstArrayAdapter);
+
+
             } catch (JSONException e) {
                 e.printStackTrace();
             }
