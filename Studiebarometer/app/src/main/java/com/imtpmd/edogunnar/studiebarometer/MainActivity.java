@@ -240,7 +240,7 @@ public class MainActivity extends AppCompatActivity {
             // periode 4
             if (datumVandaagParsed.after(datumBeginPeriode4) && datumVandaagParsed.before(datumEindPeriode4)) {
 
-                huidigePeriode.setText("Periode 3");
+                huidigePeriode.setText("Periode 4");
             }
 
             Log.d("huidigePeriode MA", huidigePeriode.getText().toString());
@@ -352,10 +352,12 @@ public class MainActivity extends AppCompatActivity {
     public void adviesGeven() {
 
         int adviesTotaalEC = 0;
-        int puntenPeriode1 = 13;
+//        int puntenPeriode1 = 13;
         int puntenPeriode2 = 16;
         int puntenPeriode3 = 14;
         int puntenPeriode4 = 17;
+
+        int mogelijkePunten = 0;
 
         if (huidigePeriode.getText().toString().contains("Periode 1")) {
             try {
@@ -363,16 +365,23 @@ public class MainActivity extends AppCompatActivity {
                     JSONObject vak = jsonArray.getJSONObject(i);
 //                    vakNaam = vak.getString("name");
 //                    vakPeriode = vak.getString("period");
-                    double vakCijfer = Double.parseDouble(vak.getString("grade"));
+                    String vakCijfer = vak.getString("grade");
+                    double vakCijferDouble = Double.parseDouble(vakCijfer);
                     int vakStudiePunten = Integer.parseInt(vak.getString("ects"));
 
-                    if (vakCijfer >= 5.5) {
+                    if (vakCijferDouble >= 5.5) {
                         adviesTotaalEC = adviesTotaalEC + vakStudiePunten;
+                    }
+                    if (vakCijfer.equals("0") && (vakPeriode.equals("1") || vakPeriode.equals("2") || vakPeriode.equals("3") || vakPeriode.equals("4")))
+                    {
+                        mogelijkePunten = mogelijkePunten + vakStudiePunten;
                     }
                 }
 
-                adviesTotaalEC = adviesTotaalEC + puntenPeriode2 + puntenPeriode3 + puntenPeriode4;
+                Log.d("mogelijkePunten", String.valueOf(mogelijkePunten));
                 Log.d("adviesTotaalEC", String.valueOf(adviesTotaalEC));
+                adviesTotaalEC = adviesTotaalEC + mogelijkePunten;// + puntenPeriode2 + puntenPeriode3 + puntenPeriode4;
+                Log.d("new adviesTotaalEC", String.valueOf(adviesTotaalEC));
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -384,16 +393,23 @@ public class MainActivity extends AppCompatActivity {
                     JSONObject vak = jsonArray.getJSONObject(i);
 //                    vakNaam = vak.getString("name");
 //                    vakPeriode = vak.getString("period");
-                    double vakCijfer = Double.parseDouble(vak.getString("grade"));
+                    String vakCijfer = vak.getString("grade");
+                    double vakCijferDouble = Double.parseDouble(vakCijfer);
                     int vakStudiePunten = Integer.parseInt(vak.getString("ects"));
 
-                    if (vakCijfer >= 5.5) {
+                    if (vakCijferDouble >= 5.5) {
                         adviesTotaalEC = adviesTotaalEC + vakStudiePunten;
+                    }
+                    if (vakCijfer.equals("0") && (vakPeriode.equals("2") || vakPeriode.equals("3") || vakPeriode.equals("4")))
+                    {
+                        mogelijkePunten = mogelijkePunten + vakStudiePunten;
                     }
                 }
 
-                adviesTotaalEC = puntenPeriode1 + adviesTotaalEC + puntenPeriode3 + puntenPeriode4;
+                Log.d("mogelijkePunten", String.valueOf(mogelijkePunten));
                 Log.d("adviesTotaalEC", String.valueOf(adviesTotaalEC));
+                adviesTotaalEC = adviesTotaalEC + mogelijkePunten;// + puntenPeriode3 + puntenPeriode4;
+                Log.d("new adviesTotaalEC", String.valueOf(adviesTotaalEC));
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -405,16 +421,24 @@ public class MainActivity extends AppCompatActivity {
                     JSONObject vak = jsonArray.getJSONObject(i);
 //                    vakNaam = vak.getString("name");
 //                    vakPeriode = vak.getString("period");
-                    double vakCijfer = Double.parseDouble(vak.getString("grade"));
+                    String vakCijfer = vak.getString("grade");
+                    double vakCijferDouble = Double.parseDouble(vakCijfer);
                     int vakStudiePunten = Integer.parseInt(vak.getString("ects"));
 
-                    if (vakCijfer >= 5.5) {
+                    if (vakCijferDouble >= 5.5) {
                         adviesTotaalEC = adviesTotaalEC + vakStudiePunten;
+                    }
+                    if (vakCijfer.equals("0") && (vakPeriode.equals("3") || vakPeriode.equals("4")))
+                    {
+                        mogelijkePunten = mogelijkePunten + vakStudiePunten;
                     }
                 }
 
-                adviesTotaalEC = adviesTotaalEC + puntenPeriode4;
+                Log.d("mogelijkePunten", String.valueOf(mogelijkePunten));
                 Log.d("adviesTotaalEC", String.valueOf(adviesTotaalEC));
+                adviesTotaalEC = adviesTotaalEC + mogelijkePunten;// + puntenPeriode4;
+                Log.d("new adviesTotaalEC", String.valueOf(adviesTotaalEC));
+
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -426,13 +450,26 @@ public class MainActivity extends AppCompatActivity {
                     JSONObject vak = jsonArray.getJSONObject(i);
                     vakNaam = vak.getString("name");
                     vakPeriode = vak.getString("period");
-                    double vakCijfer = Double.parseDouble(vak.getString("grade"));
+                    String vakCijfer = vak.getString("grade");
+                    double vakCijferDouble = Double.parseDouble(vakCijfer);
                     int vakStudiePunten = Integer.parseInt(vak.getString("ects"));
 
-                    if (vakCijfer >= 5.5) {
+                    if (vakCijferDouble >= 5.5) {
                         adviesTotaalEC = adviesTotaalEC + vakStudiePunten;
                     }
+//                    Log.d("vakCijfer", String.valueOf(vakCijfer));
+//                    Log.d("vakPeriode", vakPeriode);
+
+                    if (vakCijfer.equals("0") && vakPeriode.equals("4"))
+                    {
+                        mogelijkePunten = mogelijkePunten + vakStudiePunten;
+                    }
                 }
+
+                Log.d("mogelijkePunten", String.valueOf(mogelijkePunten));
+                Log.d("adviesTotaalEC", String.valueOf(adviesTotaalEC));
+                adviesTotaalEC = adviesTotaalEC + mogelijkePunten;
+                Log.d("new adviesTotaalEC", String.valueOf(adviesTotaalEC));
 
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -447,20 +484,21 @@ public class MainActivity extends AppCompatActivity {
             advies.setText("Er kunnen nog 60 punten behaald worden! Ga zo door!");
 
         }
-        if (adviesTotaalEC >= 50 && adviesTotaalEC < 60) {
-            advies.setText("Je gaat je propedeuse dit jaar helaas niet meer halen. Gelukkig heb je in het tweede jaar weer kans!\n\n" +
-                    "Misgelopen punten: " + (60 - adviesTotaalEC) + "\nJe kunt dit jaar nog " + adviesTotaalEC + " punten halen.");
+        if (adviesTotaalEC < 60) {
+            advies.setText("Je gaat je propedeuse dit jaar helaas niet meer halen. Gelukkig heb je in het tweede jaar weer kans!" +
+                    "\nJe kunt dit jaar nog eindigen met " + adviesTotaalEC + " punten." +
+                    "\n\nMisgelopen punten: " + (60 - adviesTotaalEC));
 
         }
         if (adviesTotaalEC < 50) {
-            advies.setText("Je blijft mogelijk zitten mits je voor het einde van het jaar niet minimaal 50 punten haalt!\n" +
-                    "\n" +
-                    "Misgelopen punten: " + (60 - adviesTotaalEC) + "\nJe kunt dit jaar nog " + adviesTotaalEC + " punten halen.");
+            advies.setText("Je blijft mogelijk zitten als je voor het einde van het jaar niet minimaal 50 punten haalt!" +
+                    "\nJe kunt dit jaar nog eindigen met " + adviesTotaalEC + " punten." +
+                    "\n\nMisgelopen punten: " + (60 - adviesTotaalEC));
         }
         if (adviesTotaalEC < 40) {
-            advies.setText("Het is helaas niet meer mogelijk om 40 punten te scoren.\n" +
-                    "\n" +
-                    "Misgelopen punten: " + (60 - adviesTotaalEC) + "\nJe kunt dit jaar nog " + adviesTotaalEC + " punten halen.");
+            advies.setText("Het is helaas niet meer mogelijk om 40 punten te scoren." +
+                    "\nJe kunt dit jaar nog eindigen met " + adviesTotaalEC + " punten." +
+                    "\n\nMisgelopen punten: " + (60 - adviesTotaalEC));
         }
     }
 

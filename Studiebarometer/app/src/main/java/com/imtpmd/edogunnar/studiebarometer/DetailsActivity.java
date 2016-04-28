@@ -80,24 +80,36 @@ public class DetailsActivity extends AppCompatActivity {
         buttonConfirmEditGrade.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                try {
-//                    if (vak.getString("name").equals(vakNaamDetail)) { // compare for the key-value
-                            ((JSONObject) jsonArray.get(vakIndex)).put("grade", cijferInvoer.getText().toString()); // put the new value for the key
-                            Log.d("vak naam", vak.getString("name"));
-                            Log.d("cijferInvoer", cijferInvoer.getText().toString());
-//                    }
-                }
-                catch (JSONException e)
+                if (cijferInvoer.getText().toString().equals(""))
                 {
-                    e.printStackTrace();
+                    Log.d("input", "FOUTTTTTTT");
+                    cijferInvoer.setError("Geef een cijfer op tussen 1 t/m 10\nBijvoorbeeld '5.6'");
                 }
+                else if (Double.parseDouble(cijferInvoer.getText().toString()) <= 10 && Double.parseDouble(cijferInvoer.getText().toString()) >= 1) {
+                    try {
+//                    if (vak.getString("name").equals(vakNaamDetail)) { // compare for the key-value
+                        ((JSONObject) jsonArray.get(vakIndex)).put("grade", cijferInvoer.getText().toString()); // put the new value for the key
+                        Log.d("vak naam", vak.getString("name"));
+                        Log.d("cijferInvoer", cijferInvoer.getText().toString());
+//                    }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
 
 
-                String json = "{\"vakken\":" + jsonArray.toString() + "}";
-                mPrefs.saveStringToSharedPreferences(getBaseContext(), "vakken", json);
-                Log.d("jsonArray", jsonArray.toString());
+                    String json = "{\"vakken\":" + jsonArray.toString() + "}";
+                    mPrefs.saveStringToSharedPreferences(getBaseContext(), "vakken", json);
+                    Log.d("jsonArray", jsonArray.toString());
 
-                finish();
+                    finish();
+                }
+                else {
+
+                    Log.d("input", "FOUTTTTTTT");
+                    cijferInvoer.setError("Geef een cijfer op tussen 1 t/m 10\nBijvoorbeeld '5.6'");
+                    cijferInvoer.setText("");
+
+                }
             }
         });
 
@@ -145,7 +157,7 @@ public class DetailsActivity extends AppCompatActivity {
                     vakIndex = i;
                     vakPeriode.setText("Periode " + vakPeriodeJSON);
                     vakStudiepunten.setText("EC's: " + vakEctsJSON);
-                    cijferInvoer.setText(String.valueOf(Double.parseDouble(vakCijferJSON))); // toont cijfer als 5.0 waar het om een geheel getal gaat als 5
+                    cijferInvoer.setHint(String.valueOf(Double.parseDouble(vakCijferJSON))); // toont cijfer als 5.0 waar het om een geheel getal gaat als 5
 //                    Log.d("spinnerArrayVak popu-spinner", spinnerArrayVak.toString());
                 }
 

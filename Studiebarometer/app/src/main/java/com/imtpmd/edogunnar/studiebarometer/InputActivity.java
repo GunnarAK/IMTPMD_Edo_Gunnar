@@ -50,7 +50,7 @@ public class InputActivity extends AppCompatActivity {
         setContentView(R.layout.activity_input);
 
         // add back arrow to toolbar
-        if (getSupportActionBar() != null){
+        if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowHomeEnabled(true);
         }
@@ -119,6 +119,7 @@ public class InputActivity extends AppCompatActivity {
         populateSpinnerPeriode();
 
         Button confirmButton = (Button) findViewById(R.id.buttonConfirm);
+        assert confirmButton != null;
         confirmButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -134,50 +135,38 @@ public class InputActivity extends AppCompatActivity {
                 Log.d("Input cijferinvoer", cijferInvoer.getText().toString());
                 Log.d("spinnerArrayVak", spinnerArrayVak.toString());
 
-                if (!spinnerArrayVak.equals("[Kies een andere periode]")) {
-                    if (!cijferInvoer.getText().toString().equals("")) {
-
-
-                        if (Double.parseDouble(cijferInvoer.getText().toString()) <= 10 && Double.parseDouble(cijferInvoer.getText().toString()) >= 1) {
-                            try {
+                if (cijferInvoer.getText().toString().equals("")) {
+                    Log.d("input", "FOUTTTTTTT");
+                    cijferInvoer.setError("Geef een cijfer op tussen 1 t/m 10\nBijvoorbeeld '5.6'");
+                } else if (Double.parseDouble(cijferInvoer.getText().toString()) <= 10 && Double.parseDouble(cijferInvoer.getText().toString()) >= 1) {
+                    try {
 
 //                JSONArray arr = new JSONArray(str);
-                                for (int i = 0; i < jsonArray.length(); i++) {
+                        for (int i = 0; i < jsonArray.length(); i++) {
 
-                                    JSONObject jsonObj = (JSONObject) jsonArray.get(i); // get the josn object
-                                    if (jsonObj.getString("name").equals(itemSelectedVak) && jsonObj.getString("period").equals(itemSelectedPeriode)) { // compare for the key-value
-                                        ((JSONObject) jsonArray.get(i)).put("grade", cijferInvoer.getText().toString()); // put the new value for the key
-                                        Log.d("cijferInvoer", cijferInvoer.getText().toString());
-                                        Log.d("itemSelectedVak", itemSelectedVak);
-                                        Log.d("itemSelectedPeriode", itemSelectedPeriode);
+                            JSONObject jsonObj = (JSONObject) jsonArray.get(i); // get the josn object
+                            if (jsonObj.getString("name").equals(itemSelectedVak) && jsonObj.getString("period").equals(itemSelectedPeriode)) { // compare for the key-value
+                                ((JSONObject) jsonArray.get(i)).put("grade", cijferInvoer.getText().toString()); // put the new value for the key
+                                Log.d("cijferInvoer", cijferInvoer.getText().toString());
+                                Log.d("itemSelectedVak", itemSelectedVak);
+                                Log.d("itemSelectedPeriode", itemSelectedPeriode);
 
-                                    }
-                                }
-
-                                String json = "{\"vakken\":" + jsonArray.toString() + "}";
-                                mprefs.saveStringToSharedPreferences(getBaseContext(), "vakken", json);
-                                Log.d("jsonArray", jsonArray.toString());
-                            } catch (Exception e) {
-                                e.printStackTrace();
                             }
-//                        mainActivity.studiepuntenVaststellen();
-                            finish();
-                        } else {
-
-                            Log.d("input", "FOUTTTTTTT");
-                            cijferInvoer.setError("Geef een cijfer op tussen 1 t/m 10./n Bijvoorbeeld '5.6'");
-                            cijferInvoer.setText("");
                         }
-                    } else {
 
-                        Log.d("input", "FOUTTTTTTT");
-                        cijferInvoer.setError("Geef een cijfer op tussen 1 t/m 10./n Bijvoorbeeld '5.6'");
-                        cijferInvoer.setText("");
+                        String json = "{\"vakken\":" + jsonArray.toString() + "}";
+                        mprefs.saveStringToSharedPreferences(getBaseContext(), "vakken", json);
+                        Log.d("jsonArray", jsonArray.toString());
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
+//                        mainActivity.studiepuntenVaststellen();
+                    finish();
                 } else {
-                    Log.d("vakken", "er zijn geen vakken meer, selecteer andere periode");
-                    TextView spinnerArrayPeriodeTextCast = (TextView) spinnerVak.getSelectedView();
-                    spinnerArrayPeriodeTextCast.setError("U moet even een andere periode kiezen.");
+
+                    Log.d("input", "FOUTTTTTTT");
+                    cijferInvoer.setError("Geef een cijfer op tussen 1 t/m 10\nBijvoorbeeld '5.6'");
+                    cijferInvoer.setText("");
                 }
 
 
@@ -231,8 +220,7 @@ public class InputActivity extends AppCompatActivity {
 
 //                Log.d("spinnerArrayVak", spinnerArrayVak.toString());
             }
-            if (spinnerArrayVak.isEmpty())
-            {
+            if (spinnerArrayVak.isEmpty()) {
                 spinnerArrayVak.add("Kies een andere periode");
             }
 
