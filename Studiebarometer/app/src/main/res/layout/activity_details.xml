@@ -1,42 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Naam vak"
         android:id="@+id/vakNaamEditGrade"
-        android:layout_margin="20dp"
-        android:textSize="30dp"
-        android:layout_gravity="center_horizontal" />
-
-    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Kernvak: ja/nee"
-        android:id="@+id/vakKernBoolean"
-        android:layout_margin="10dp"
-        android:layout_gravity="center_horizontal" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="EC's: x"
-        android:id="@+id/vakStudiepuntenEditGrade"
         android:layout_gravity="center_horizontal"
-        android:layout_margin="10dp"/>
+        android:layout_margin="20dp"
+        android:text="Naam vak"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textSize="30dp" />
 
     <TextView
+        android:id="@+id/vakKernBoolean"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_margin="10dp"
+        android:text="Kernvak: ja/nee"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <TextView
+        android:id="@+id/vakStudiepuntenEditGrade"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_margin="10dp"
+        android:text="EC's: x" />
+
+    <TextView
         android:id="@+id/vakPeriodeEditGrade"
-        android:text="Periode x"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
         android:layout_marginBottom="20dp"
-        android:layout_gravity="center_horizontal"/>
+        android:text="Periode x" />
 
     <EditText
         android:id="@+id/cijferInvoerEditGrade"
@@ -49,12 +50,27 @@
         android:inputType="numberDecimal"
         android:textAlignment="center" />
 
-    <Button
-        android:id="@+id/buttonEditGrade"
-        android:layout_width="120dp"
+    <LinearLayout
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:background="@color/colorPrimary"
-        android:text="Aanpassen"
-        android:textColor="#fff" />
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/buttonEditGrade"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:background="@color/colorPrimary"
+            android:text="Aanpassen"
+            android:textColor="#fff" />
+
+        <ImageButton
+            android:id="@+id/deleteCijfer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="10dp"
+            android:src="@android:drawable/ic_menu_delete" />
+    </LinearLayout>
 </LinearLayout>

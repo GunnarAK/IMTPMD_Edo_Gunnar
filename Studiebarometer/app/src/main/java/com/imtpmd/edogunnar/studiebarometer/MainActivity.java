@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
@@ -34,9 +35,11 @@ public class MainActivity extends AppCompatActivity {
     String vakCijfer;
     String vakPeriode;
 
+    JSONArray jsonArray;
+
     public String myPreferences;
     //    public String naamStudent;
-    com.imtpmd.edogunnar.studiebarometer.SharedPreferences mPrefs;
+    SharedPreferences mPrefs;
     SimpleDateFormat simpleDate = new SimpleDateFormat("dd/MM/yyyy");
     String stringDatumBeginPeriode1;
     String stringDatumEindPeriode1;
@@ -46,6 +49,11 @@ public class MainActivity extends AppCompatActivity {
     String stringDatumEindPeriode3;
     String stringDatumBeginPeriode4;
     String stringDatumEindPeriode4;
+
+    TextView huidigePeriode;
+    TextView advies;
+
+    List<String> cijferLijst;
 
 
     @Override
@@ -74,9 +82,39 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 // open nieuwe activity om alle vakken te bekijken
-                startActivity(new Intent(MainActivity.this, DetailsActivity.class));
+                startActivity(new Intent(MainActivity.this, VakkenLijstActivity.class));
             }
         });
+
+        final ListView lvCijferlijst = (ListView) findViewById(R.id.cijfersListView);
+        assert lvCijferlijst != null;
+        lvCijferlijst.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(MainActivity.this, DetailsActivity.class);
+                String message = "abc";
+//                Log.d("lv - vaknaam", vakNaam);
+//                Log.d("lv - cijferLijst", cijferLijst.get(position).toString());
+
+                String arr[] = cijferLijst.get(position).split(":", 4);
+
+//                Log.d("lv - vak", arr[0]);
+                String vak[] = arr[0].toString().split(" ", 2);
+                String vakNaamSelected = vak[0];
+//                vakje.split(" ", 2);
+                Log.d("vakNaamSelected", vakNaamSelected);
+
+
+//                Log.d("lv - position", String.valueOf(position));
+//                Log.d("lv - id", String.valueOf(id));
+                intent.putExtra("vakNaam", vakNaamSelected);
+                startActivity(intent);
+            }
+        });
+
+
+
+        advies = (TextView) findViewById(R.id.advies);
 
     }
 
@@ -86,6 +124,7 @@ public class MainActivity extends AppCompatActivity {
         Log.d("onResume", "CALLED");
         datumVaststellen();
         studiepuntenVaststellen();
+        adviesGeven();
     }
 
     public void naamVaststellen() {
@@ -107,7 +146,7 @@ public class MainActivity extends AppCompatActivity {
         String datumVandaag = simpleDate.format(new Date());
         Log.d("datumVandaag", datumVandaag);
 
-        TextView huidigePeriode = (TextView) findViewById(R.id.huidigePeriode);
+        huidigePeriode = (TextView) findViewById(R.id.huidigePeriode);
 
 
         Date datumBeginPeriode1 = new Date();
@@ -201,7 +240,7 @@ public class MainActivity extends AppCompatActivity {
             // periode 4
             if (datumVandaagParsed.after(datumBeginPeriode4) && datumVandaagParsed.before(datumEindPeriode4)) {
 
-                huidigePeriode.setText("Periode 4");
+                huidigePeriode.setText("Periode 3");
             }
 
             Log.d("huidigePeriode MA", huidigePeriode.getText().toString());
@@ -231,9 +270,9 @@ public class MainActivity extends AppCompatActivity {
             try {
                 JSONObject obj = new JSONObject(mPrefs.readStringFromSharedPreferences(getBaseContext(), "vakken"));
 
-                JSONArray jsonArray = obj.getJSONArray("vakken");
+                jsonArray = obj.getJSONArray("vakken");
 
-                List<String> cijferLijst = new ArrayList<String>();
+                cijferLijst = new ArrayList<String>();
                 ListView cijferLijstListView = (ListView) findViewById(R.id.cijfersListView);
 
                 for (int i = 0; i < jsonArray.length(); i++) {
@@ -249,6 +288,11 @@ public class MainActivity extends AppCompatActivity {
                     }
 
                     if (vakCijfer >= 1) {
+//                        cijferLijstListView.setBackgroundColor(Color.parseColor("#ffffff"));
+//                        if (vakCijfer >= 5.5)
+//                        {
+//                            cijferLijstListView.setBackgroundColor(Color.parseColor("#00ff00"));
+//                        }
                         cijferLijst.add(vakNaam + "      periode: " + vakPeriode + "      EC's: " + vakStudiePunten + "      cijfer: " + vakCijfer);
 
                     }
@@ -305,6 +349,121 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    public void adviesGeven() {
+
+        int adviesTotaalEC = 0;
+        int puntenPeriode1 = 13;
+        int puntenPeriode2 = 16;
+        int puntenPeriode3 = 14;
+        int puntenPeriode4 = 17;
+
+        if (huidigePeriode.getText().toString().contains("Periode 1")) {
+            try {
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    JSONObject vak = jsonArray.getJSONObject(i);
+//                    vakNaam = vak.getString("name");
+//                    vakPeriode = vak.getString("period");
+                    double vakCijfer = Double.parseDouble(vak.getString("grade"));
+                    int vakStudiePunten = Integer.parseInt(vak.getString("ects"));
+
+                    if (vakCijfer >= 5.5) {
+                        adviesTotaalEC = adviesTotaalEC + vakStudiePunten;
+                    }
+                }
+
+                adviesTotaalEC = adviesTotaalEC + puntenPeriode2 + puntenPeriode3 + puntenPeriode4;
+                Log.d("adviesTotaalEC", String.valueOf(adviesTotaalEC));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
+        if (huidigePeriode.getText().toString().contains("Periode 2")) {
+            try {
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    JSONObject vak = jsonArray.getJSONObject(i);
+//                    vakNaam = vak.getString("name");
+//                    vakPeriode = vak.getString("period");
+                    double vakCijfer = Double.parseDouble(vak.getString("grade"));
+                    int vakStudiePunten = Integer.parseInt(vak.getString("ects"));
+
+                    if (vakCijfer >= 5.5) {
+                        adviesTotaalEC = adviesTotaalEC + vakStudiePunten;
+                    }
+                }
+
+                adviesTotaalEC = puntenPeriode1 + adviesTotaalEC + puntenPeriode3 + puntenPeriode4;
+                Log.d("adviesTotaalEC", String.valueOf(adviesTotaalEC));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
+        if (huidigePeriode.getText().toString().contains("Periode 3")) {
+            try {
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    JSONObject vak = jsonArray.getJSONObject(i);
+//                    vakNaam = vak.getString("name");
+//                    vakPeriode = vak.getString("period");
+                    double vakCijfer = Double.parseDouble(vak.getString("grade"));
+                    int vakStudiePunten = Integer.parseInt(vak.getString("ects"));
+
+                    if (vakCijfer >= 5.5) {
+                        adviesTotaalEC = adviesTotaalEC + vakStudiePunten;
+                    }
+                }
+
+                adviesTotaalEC = adviesTotaalEC + puntenPeriode4;
+                Log.d("adviesTotaalEC", String.valueOf(adviesTotaalEC));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
+        if (huidigePeriode.getText().toString().contains("Periode 4")) {
+            try {
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    JSONObject vak = jsonArray.getJSONObject(i);
+                    vakNaam = vak.getString("name");
+                    vakPeriode = vak.getString("period");
+                    double vakCijfer = Double.parseDouble(vak.getString("grade"));
+                    int vakStudiePunten = Integer.parseInt(vak.getString("ects"));
+
+                    if (vakCijfer >= 5.5) {
+                        adviesTotaalEC = adviesTotaalEC + vakStudiePunten;
+                    }
+                }
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
+        if (adviesTotaalEC == 60 || adviesTotaalEC >= 60) {
+            if (adviesTotaalEC > 60) {
+                adviesTotaalEC = 60;
+            }
+
+            advies.setText("Er kunnen nog 60 punten behaald worden! Ga zo door!");
+
+        }
+        if (adviesTotaalEC >= 50 && adviesTotaalEC < 60) {
+            advies.setText("Je gaat je propedeuse dit jaar helaas niet meer halen. Gelukkig heb je in het tweede jaar weer kans!\n\n" +
+                    "Misgelopen punten: " + (60 - adviesTotaalEC) + "\nJe kunt dit jaar nog " + adviesTotaalEC + " punten halen.");
+
+        }
+        if (adviesTotaalEC < 50) {
+            advies.setText("Je blijft mogelijk zitten mits je voor het einde van het jaar niet minimaal 50 punten haalt!\n" +
+                    "\n" +
+                    "Misgelopen punten: " + (60 - adviesTotaalEC) + "\nJe kunt dit jaar nog " + adviesTotaalEC + " punten halen.");
+        }
+        if (adviesTotaalEC < 40) {
+            advies.setText("Het is helaas niet meer mogelijk om 40 punten te scoren.\n" +
+                    "\n" +
+                    "Misgelopen punten: " + (60 - adviesTotaalEC) + "\nJe kunt dit jaar nog " + adviesTotaalEC + " punten halen.");
+        }
+    }
+
     public String JSONParser(String jsonString) {
         Log.d("JSONParser()", "Started!");
 
@@ -312,7 +471,7 @@ public class MainActivity extends AppCompatActivity {
         try {
             JSONObject obj = new JSONObject(jsonString);
 
-            JSONArray jsonArray = obj.getJSONArray("vakken");
+            jsonArray = obj.getJSONArray("vakken");
             arrayListVakken = new ArrayList<HashMap<String, String>>();
             HashMap<String, String> hashMap;
 

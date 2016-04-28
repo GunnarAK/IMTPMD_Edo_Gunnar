@@ -19,6 +19,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".VakkenLijstActivity" />
         <activity android:name=".InputActivity" />
         <activity android:name=".DetailsActivity" />
         <activity android:name=".RegisterActivity" android:theme="@style/AppTheme.NoActionBar" />
