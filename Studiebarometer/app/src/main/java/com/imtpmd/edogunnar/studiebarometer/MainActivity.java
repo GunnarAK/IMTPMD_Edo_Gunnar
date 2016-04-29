@@ -357,6 +357,8 @@ public class MainActivity extends AppCompatActivity {
         int puntenPeriode3 = 14;
         int puntenPeriode4 = 17;
 
+        boolean nietIngevuldeCijfers = true;
+
         int mogelijkePunten = 0;
 
         if (huidigePeriode.getText().toString().contains("Periode 1")) {
@@ -463,6 +465,7 @@ public class MainActivity extends AppCompatActivity {
                     if (vakCijfer.equals("0") && vakPeriode.equals("4"))
                     {
                         mogelijkePunten = mogelijkePunten + vakStudiePunten;
+                        nietIngevuldeCijfers = true;
                     }
                 }
 
@@ -485,20 +488,23 @@ public class MainActivity extends AppCompatActivity {
 
         }
         if (adviesTotaalEC < 60) {
-            advies.setText("Je gaat je propedeuse dit jaar helaas niet meer halen. Gelukkig heb je in het tweede jaar weer kans!" +
-                    "\nJe kunt dit jaar nog eindigen met " + adviesTotaalEC + " punten." +
-                    "\n\nMisgelopen punten: " + (60 - adviesTotaalEC));
+            String deel1 = "Je gaat je propedeuse dit jaar helaas niet meer halen. Gelukkig heb je in het tweede jaar weer kans!";
+            String deel2 = "\nJe kunt dit jaar nog eindigen met " + adviesTotaalEC + " punten.";
+            if (nietIngevuldeCijfers == false) {deel2 = "";};
+            advies.setText( deel1 + deel2 + "\n\nMisgelopen punten: " + (60 - adviesTotaalEC));
 
         }
         if (adviesTotaalEC < 50) {
-            advies.setText("Je blijft mogelijk zitten als je voor het einde van het jaar niet minimaal 50 punten haalt!" +
-                    "\nJe kunt dit jaar nog eindigen met " + adviesTotaalEC + " punten." +
-                    "\n\nMisgelopen punten: " + (60 - adviesTotaalEC));
+            String deel1 = "Je blijft helaas zitten omdat je voor het einde van het jaar niet minimaal 50 punten kunt halen.";
+            String deel2 = "\nJe kunt dit jaar nog eindigen met " + adviesTotaalEC + " punten.";
+            if (nietIngevuldeCijfers == false) {deel2 = "";};
+            advies.setText( deel1 + deel2 + "\n\nMisgelopen punten: " + (60 - adviesTotaalEC));
         }
         if (adviesTotaalEC < 40) {
-            advies.setText("Het is helaas niet meer mogelijk om 40 punten te scoren." +
-                    "\nJe kunt dit jaar nog eindigen met " + adviesTotaalEC + " punten." +
-                    "\n\nMisgelopen punten: " + (60 - adviesTotaalEC));
+            String deel1 = "Het is helaas niet meer mogelijk om 40 punten te scoren. Je krijgt een negatief BSA.";
+            String deel2 = "\nJe kunt dit jaar nog eindigen met " + adviesTotaalEC + " punten.";
+            if (nietIngevuldeCijfers == false) {deel2 = "";};
+            advies.setText( deel1 + deel2 + "\n\nMisgelopen punten: " + (60 - adviesTotaalEC));
         }
     }
 
